@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hydroinformatics_data_management_system/pages/user_registration_documents_page.dart';
 import 'package:hydroinformatics_data_management_system/providers/registration_status_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/user_registration_provider.dart';
+import 'package:hydroinformatics_data_management_system/providers/user_registration_documents_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/user_details_provider.dart';
@@ -20,11 +22,13 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
   late UserRegistrationProvider userRegistrationProvider;
   late UserDetailsProvider userDetailsProvider;
   late RegistrationStatusProvider registrationStatusProvider;
+  late UserRegistrationDocumentsProvider userRegistrationDocumentsProvider;
   bool callOnce = true;
 
   @override
   void didChangeDependencies() {
     userRegistrationProvider = Provider.of(context, listen: true);
+    userRegistrationDocumentsProvider = Provider.of(context, listen: true);
     registrationStatusProvider = Provider.of(context, listen: true);
     userDetailsProvider = Provider.of(context);
 
@@ -32,6 +36,11 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
       userRegistrationProvider.getRegistrationInfo(context).then((value) {
         userRegistrationProvider.getPendingRegistrationInfo();
       });
+      // await userRegistrationDocumentsProvider
+      //     .getRegistrationDocumentsInfo(
+      //     context,
+      //     userRegistrationProvider
+      //         .dataList[index].storageId);
       callOnce = false;
     }
     super.didChangeDependencies();
@@ -413,46 +422,148 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                   side: BorderSide(color: Colors.blueAccent)),
                               child: Padding(
                                 padding: const EdgeInsets.all(8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                child: Row(
                                   children: [
-                                    Text(
-                                        'Full Name: ${userRegistrationProvider.dataList[index].name}',
-                                        maxLines: 2,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white)),
-                                    const SizedBox(
-                                      height: 5,
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                              'Full Name: ${userRegistrationProvider.dataList[index].name}',
+                                              maxLines: 2,
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.white)),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                              'Mobile: ${userRegistrationProvider.dataList[index].mobileNo}',
+                                              maxLines: 2,
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.white)),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                              'Email: ${userRegistrationProvider.dataList[index].email}',
+                                              maxLines: 2,
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.white)),
+                                          const SizedBox(
+                                            height: 5,
+                                          ),
+                                          Text(
+                                              'Date: ${userRegistrationProvider.dataList[index].createDatetime}',
+                                              maxLines: 2,
+                                              style: GoogleFonts.poppins(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Colors.white)),
+                                        ],
+                                      ),
                                     ),
-                                    Text(
-                                        'Mobile: ${userRegistrationProvider.dataList[index].mobileNo}',
-                                        maxLines: 2,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white)),
-                                    const SizedBox(
-                                      height: 5,
+                                    IconButton(
+                                      onPressed: () async {
+                                        String? data = await userRegistrationDocumentsProvider
+                                            .getRegistrationDocumentsInfo(
+                                                context,
+                                                userRegistrationProvider
+                                                    .dataList[index].storageId);
+
+                                        print(
+                                            'Storage Id: ${userRegistrationProvider.dataList[index].storageId}');
+
+                                        // String? data =
+                                        //     userRegistrationDocumentsProvider
+                                        //         .userRegistrationDocumentsModel!
+                                        //         .data;
+                                        // print('Image data: $data');
+
+                                        if (data != null) {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) {
+                                            return UserRegistrationDocumentsPage(
+                                                data: data);
+                                          }));
+                                        } else {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) {
+                                                return AlertDialog(
+                                                  content: Text(
+                                                      "User didn't give any Image"),
+                                                  actions: [
+                                                    ElevatedButton(
+                                                      onPressed: () {Navigator.pop(context);},
+                                                      child: const Text('Ok'),
+                                                    ),
+                                                  ],
+                                                );
+                                              });
+                                        }
+
+                                        // if (data == null) {
+                                        //   showDialog(
+                                        //     context: context,
+                                        //     builder: (_) => AlertDialog(
+                                        //       title: const Text('Please Check'),
+                                        //       content: const Text("Image is not given by user"),
+                                        //       actions: [
+                                        //         ElevatedButton(onPressed: () {}, child: const Text('No'),),
+                                        //         ElevatedButton(onPressed: () {
+                                        //           Navigator.pop(context);
+                                        //
+                                        //         }, child: const Text('Yes'),),
+                                        //       ],
+                                        //     ),
+                                        //   );
+                                        // } else {
+                                        //   Navigator.push(context,
+                                        //       MaterialPageRoute(
+                                        //           builder: (context) {
+                                        //     return UserRegistrationDocumentsPage(
+                                        //         data: data);
+                                        //   }));
+                                        // }
+
+                                        // showModalBottomSheet(
+                                        //   //isScrollControlled: true,
+                                        //
+                                        //   backgroundColor: Colors.blue,
+                                        //   context: context,
+                                        //   builder: (BuildContext context) {
+                                        //     return SingleChildScrollView(
+                                        //       child: Container(
+                                        //         height: 700,
+                                        //         width: double.infinity,
+                                        //
+                                        //         child: Column(
+                                        //           mainAxisSize: MainAxisSize.min,
+                                        //           children: [
+                                        //             Text('Data: ${userRegistrationDocumentsProvider.getRegistrationDocumentsInfo(context, userRegistrationProvider.dataList[index].storageId).then((value) {
+                                        //               userRegistrationDocumentsProvider.userRegistrationDocumentsModel!.type;
+                                        //             })}'),
+                                        //             //Text('imran'),
+                                        //           ],
+                                        //         ),
+                                        //       ),
+                                        //     );
+                                        //   },
+                                        // );
+                                      },
+                                      icon: const Icon(
+                                        Icons.picture_as_pdf,
+                                        color: Colors.white,
+                                      ),
                                     ),
-                                    Text(
-                                        'Email: ${userRegistrationProvider.dataList[index].email}',
-                                        maxLines: 2,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white)),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                        'Date: ${userRegistrationProvider.dataList[index].createDatetime}',
-                                        maxLines: 2,
-                                        style: GoogleFonts.poppins(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w400,
-                                            color: Colors.white)),
                                   ],
                                 ),
                               )),

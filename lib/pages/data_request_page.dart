@@ -14,9 +14,36 @@ class DataRequestPage extends StatefulWidget {
   State<DataRequestPage> createState() => _DataRequestPageState();
 }
 
+
+
+
 class _DataRequestPageState extends State<DataRequestPage> {
   bool callOnce = true;
+
   late DataRequestProvider dataRequestProvider;
+
+  String labelText = 'Username';
+
+  void _updateLabelText(String newText) {
+    setState(() {
+      labelText = newText;
+    });
+  }
+
+
+
+  // @override
+  // void initState() {
+  //   dataRequestProvider = Provider.of(context, listen: false);
+  //   if (callOnce) {
+  //     dataRequestProvider.getDataRequestInfo(context).then((value) {
+  //       dataRequestProvider.getDataRequestList();
+  //     });
+  //     callOnce = false;
+  //   }
+  //   // TODO: implement initState
+  //   super.initState();
+  // }
 
   @override
   void didChangeDependencies() {
@@ -45,95 +72,172 @@ class _DataRequestPageState extends State<DataRequestPage> {
               fontSize: 18, fontWeight: FontWeight.w400, color: Colors.white),
         ),
         centerTitle: true,
+
+        // actions: [
+        //   IconButton(
+        //     onPressed: () {},
+        //     icon: Icon(Icons.list),
+        //   ),
+        // ],
       ),
       body: Container(
           height: MediaQuery.of(context).size.height,
           margin: EdgeInsets.all(15),
           child: SingleChildScrollView(
-            child: Column(
-              children: [
-                dataRequestProvider.dataRequestList.isEmpty
-                    ? Center(
-                        child: Text(
-                        'No pending data request .....',
-                        style: GoogleFonts.poppins(
-                            fontSize: 14, fontWeight: FontWeight.w500),
-                      ))
-                    : ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: dataRequestProvider.dataRequestList.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
-                                  DataRequestDetailsPage.dataRequestDetailsPage,
-                                  arguments: dataRequestProvider
-                                      .dataRequestList[index].reqMasId);
-                            },
-                            child: Card(
-                                color: Colors.lightBlue.withOpacity(.5),
-                                elevation: 5,
-                                shape: RoundedRectangleBorder(
+            child: dataRequestProvider.dataRequestList.isEmpty
+                ? Center(
+                    child: Text(
+                    'No pending data request .....',
+                    style: GoogleFonts.poppins(
+                        fontSize: 14, fontWeight: FontWeight.w500),
+                  ))
+                : Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                onChanged: (value) {
+                                  //provider.search(value);
+                                  dataRequestProvider.search(labelText, value);
+                                  print('TextField Value: $value');
+                                },
+
+
+
+                                decoration: InputDecoration(
+                                  labelText: labelText,
+
+                                  border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(10),
-                                    side: const BorderSide(
-                                        color: Colors.blueAccent)),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          'User Name: ${dataRequestProvider.dataRequestList[index].userName}',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white)),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'Email: ${dataRequestProvider.dataRequestList[index].email}',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white)),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'Contact: ${dataRequestProvider.dataRequestList[index].mobileNo}',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white)),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'Request Type: ${dataRequestProvider.dataRequestList[index].category}',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white)),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                          'Invoice Date: ${dataRequestProvider.dataRequestList[index].requestDate}',
-                                          style: GoogleFonts.poppins(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.w400,
-                                              color: Colors.white)),
-                                    ],
                                   ),
-                                )),
-                          );
-                        }),
-              ],
-            ),
+                                  suffixIcon: Icon(Icons.search),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 10,),
+                            PopupMenuButton<String>(
+                              icon: Icon(Icons.more_vert),
+                              onSelected: (String value) {
+                                print(value);
+                                _updateLabelText(value);
+                              },
+                              itemBuilder: (BuildContext context) {
+                                return [
+                                  PopupMenuItem<String>(
+                                    value: 'Username',
+                                    child: Text('Username'),
+                                  ),
+                                  PopupMenuItem<String>(
+                                    value: 'Gmail',
+                                    child: Text('Gmail'),
+                                  ),
+                                  PopupMenuItem<String>(
+                                    value: 'Contact Number',
+                                    child: Text('Contact Number'),
+                                  ),
+                                ];
+                              },
+                            ),
+
+                          ],
+                        ),
+                      ),
+
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          //itemCount: dataRequestProvider.dataRequestList.length,
+                          itemCount: dataRequestProvider
+                              .searchedDataRequestInfoModel
+                              .dataRequestInfo
+                              ?.length,
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () {
+                                Navigator.of(context).pushNamed(
+                                    DataRequestDetailsPage
+                                        .dataRequestDetailsPage,
+                                    arguments: dataRequestProvider
+                                        .dataRequestList[index].reqMasId);
+                              },
+                              child: Card(
+                                  color: Colors.lightBlue.withOpacity(.5),
+                                  elevation: 5,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      side: const BorderSide(
+                                          color: Colors.blueAccent)),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            //'User Name: ${dataRequestProvider.dataRequestList[index].userName}',
+                                            //'User Name: ${dataRequestProvider.searchedDataRequestInfoModel.dataRequestInfo?[index].userName}',
+                                            dataRequestProvider
+                                                .searchedDataRequestInfoModel
+                                                .dataRequestInfo?[index]
+                                                .userName as String,
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white)),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                            //'Email: ${dataRequestProvider.dataRequestList[index].email}',
+                                            'Email: ${dataRequestProvider.searchedDataRequestInfoModel.dataRequestInfo?[index].email}',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white)),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                            // 'Contact: ${dataRequestProvider.dataRequestList[index].mobileNo}',
+                                            'Contact: ${dataRequestProvider.searchedDataRequestInfoModel.dataRequestInfo?[index].mobileNo}',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white)),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                            // 'Request Type: ${dataRequestProvider.dataRequestList[index].category}',
+                                            'Request Type: ${dataRequestProvider.searchedDataRequestInfoModel.dataRequestInfo?[index].category}',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white)),
+                                        const SizedBox(
+                                          height: 5,
+                                        ),
+                                        Text(
+                                            // 'Invoice Date: ${dataRequestProvider.dataRequestList[index].requestDate}',
+                                            'Invoice Date: ${dataRequestProvider.searchedDataRequestInfoModel.dataRequestInfo?[index].requestDate}',
+                                            style: GoogleFonts.poppins(
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w400,
+                                                color: Colors.white)),
+                                      ],
+                                    ),
+                                  )),
+                            );
+                          }),
+
+                    ],
+                  ),
           )),
     );
   }
+
+
 }

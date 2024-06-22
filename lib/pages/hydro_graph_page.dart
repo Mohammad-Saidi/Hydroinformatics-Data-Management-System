@@ -28,6 +28,7 @@ class _HydroGraphPageState extends State<HydroGraphPage> {
   final formKey = GlobalKey<FormState>();
   late GraphProvider graphProvider;
 
+
   @override
   void didChangeDependencies() {
     stationInfoProvider = Provider.of(context, listen: true);
@@ -35,6 +36,7 @@ class _HydroGraphPageState extends State<HydroGraphPage> {
     if (callOnce == false && stationInfoProvider.stationInfo.isNotEmpty) {
       stationInfoProvider.stationName.clear();
       stationInfoProvider.getStationName();
+
       selectedStation = stationInfoProvider.stationName[0];
       selectedKeyword = stationInfoProvider.getStationKeyword(selectedStation);
       callOnce = true;

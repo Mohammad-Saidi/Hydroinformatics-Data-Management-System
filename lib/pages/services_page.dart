@@ -34,7 +34,9 @@ class _ServicesPageState extends State<ServicesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       backgroundColor: Color(0XFF64B5F6),
+      //backgroundColor: Colors.red,
       drawer: HomePageDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.blue,

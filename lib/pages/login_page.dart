@@ -7,8 +7,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hydroinformatics_data_management_system/helpers/helper_method.dart';
+import 'package:hydroinformatics_data_management_system/pages/services_page.dart';
+import 'package:hydroinformatics_data_management_system/pages/splash_page.dart';
 import 'package:hydroinformatics_data_management_system/providers/login_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:upgrader/upgrader.dart';
 import '../custom/bottom_navigation.dart';
 
@@ -236,6 +239,12 @@ class _LoginPageState extends State<LoginPage> {
                       Center(
                         child: ElevatedButton(
                             onPressed: () {
+                              // var sharedPref = await SharedPreferences.getInstance();
+                              // sharedPref.setBool(SplashPageState.KEYLOGIN, true);
+
+
+
+
                               if (formKey.currentState!.validate()) {
                                 EasyLoading.show(status: 'Loading');
 
@@ -247,6 +256,14 @@ class _LoginPageState extends State<LoginPage> {
 
                                   if (value != null) {
                                     if (value['status'] == 'success') {
+
+
+                                      final SharedPreferences loginPref = await SharedPreferences.getInstance();
+                                      await loginPref.setString('userName', emailController.text);
+                                      await loginPref.setString('password', passwordController.text);
+
+
+
                                       HelperMethod.setUserId(
                                           value['user_id'].toString());
 
@@ -261,7 +278,8 @@ class _LoginPageState extends State<LoginPage> {
                                               title: 'Congratulations !!',
                                               text: value['message'].toString(),
                                               confirmButtonText: 'Home',
-                                              onConfirm: () {
+                                              onConfirm: ()  {
+
                                                 Navigator.of(context).pop();
                                                 Navigator.of(context).pushNamed(
                                                     BottomNavigationPage
@@ -294,6 +312,10 @@ class _LoginPageState extends State<LoginPage> {
                                   }
                                 });
                               }
+
+
+
+
                             },
                             style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,

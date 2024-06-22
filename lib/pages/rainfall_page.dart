@@ -204,7 +204,7 @@ class _RainfallPageState extends State<RainfallPage> {
                                                     context: context,
                                                     initialDate: DateTime.now(),
                                                     firstDate: DateTime(1950),
-                                                    lastDate: DateTime(2100));
+                                                    lastDate: DateTime.now());
 
                                             if (pickedDate != null) {
                                               String formattedDate =
@@ -330,7 +330,7 @@ class _RainfallPageState extends State<RainfallPage> {
                                       validator: (value) {
                                         RegExp pattern1 =
                                             RegExp(r'^\d{0,3}\.\d{1,3}$');
-                                        RegExp pattern2 = RegExp(r'^\d+$');
+                                        RegExp pattern2 = RegExp(r'^-?\d+$');
 
                                         if (value == null || value.isEmpty) {
                                           return 'Please provide a value';

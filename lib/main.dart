@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:hydroinformatics_data_management_system/custom/bottom_navigation.dart';
 import 'package:hydroinformatics_data_management_system/pages/contact_page.dart';
@@ -6,8 +7,10 @@ import 'package:hydroinformatics_data_management_system/pages/data_availability_
 import 'package:hydroinformatics_data_management_system/pages/data_request_details_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/data_request_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/data_selection_page.dart';
+import 'package:hydroinformatics_data_management_system/pages/edit_profile_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/ground_water_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/hydro_graph_page.dart';
+import 'package:hydroinformatics_data_management_system/pages/initial_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/login_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/rainfall_graph_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/rainfall_page.dart';
@@ -27,18 +30,35 @@ import 'package:hydroinformatics_data_management_system/providers/registration_s
 import 'package:hydroinformatics_data_management_system/providers/station_info_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/subdivision_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/user_details_provider.dart';
+import 'package:hydroinformatics_data_management_system/providers/user_registration_documents_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/user_registration_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/water_level_availability_provider.dart';
+import 'package:hydroinformatics_data_management_system/utils/user_preferences.dart';
 import 'package:provider/provider.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main() {
+Future main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
+
+  await UserPreferences.init();
+
+
+
+
+
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => LoginProvider()),
     ChangeNotifierProvider(create: (context) => StationInfoProvider()),
     ChangeNotifierProvider(create: (context) => GraphProvider()),
     ChangeNotifierProvider(create: (context) => UserRegistrationProvider()),
+    ChangeNotifierProvider(create: (context) => UserRegistrationDocumentsProvider()),
     ChangeNotifierProvider(create: (context) => UserDetailsProvider()),
     ChangeNotifierProvider(create: (context) => RegistrationStatusProvider()),
     ChangeNotifierProvider(create: (context) => DataRequestProvider()),
@@ -88,6 +108,8 @@ class MyApp extends StatelessWidget {
             WaterLevelAvailabilityPage(),
         DataAvailabilityListPage.dataAvailabilityListPage: (create) =>
             DataAvailabilityListPage(),
+        EditProfilePage.editProfilePage: (create) => EditProfilePage(),
+        InitialPage.initialPage: (create) => InitialPage(),
       },
     );
   }
