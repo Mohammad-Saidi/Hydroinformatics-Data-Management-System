@@ -9,7 +9,8 @@ import 'package:provider/provider.dart';
 import '../providers/data_request_provider.dart';
 
 class DataRequestDetailsPage extends StatefulWidget {
-  const DataRequestDetailsPage({super.key});
+  const DataRequestDetailsPage({this.paymentMethod, super.key});
+  final num? paymentMethod;
 
   static const String dataRequestDetailsPage = 'dataRequestDetailsPage';
 
@@ -647,7 +648,7 @@ class _DataRequestDetailsPageState extends State<DataRequestDetailsPage> {
                               if (value != null) {
                                 if (value['status'] == "success") {
                                   dataRequestProvider
-                                      .getDataRequestInfo(context)
+                                      .getDataRequestInfo(context, widget.paymentMethod!)
                                       .then((data) {
                                     Navigator.pushReplacementNamed(context,
                                         DataRequestPage.dataRequestPage);
@@ -703,7 +704,7 @@ class _DataRequestDetailsPageState extends State<DataRequestDetailsPage> {
                               if (value != null) {
                                 if (value['status'] == "success") {
                                   dataRequestProvider
-                                      .getDataRequestInfo(context)
+                                      .getDataRequestInfo(context, widget.paymentMethod!)
                                       .then((data) {
                                     Navigator.pushReplacementNamed(context,
                                         DataRequestPage.dataRequestPage);

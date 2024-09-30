@@ -48,6 +48,7 @@ DataRequestDetailsModel copyWith({  String? status,
     return map;
   }
 
+
 }
 
 /// data_type : "Water Level"

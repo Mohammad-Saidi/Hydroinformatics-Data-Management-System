@@ -8,13 +8,13 @@ import 'package:hydroinformatics_data_management_system/services/data_request_se
 import '../main.dart';
 
 class DataRequestProvider extends ChangeNotifier {
-  DataRequestInfoModel dataRequestInfoModel = DataRequestInfoModel(dataRequestInfo: []);
-  DataRequestInfoModel searchedDataRequestInfoModel = DataRequestInfoModel(dataRequestInfo: []);
-  List<DataRequestInfo> dataRequestList = [];
+  DataRequestInfoModel dataRequestInfoModel = DataRequestInfoModel(data: []);
+  DataRequestInfoModel searchedDataRequestInfoModel = DataRequestInfoModel(data: []);
+  List<Data> dataRequestList = [];
   //String searchText = '';
 
-  Future<void> getDataRequestInfo(context) async {
-    final data = await DataRequestService.dataRequest();
+  Future<void> getDataRequestInfo(context, num value) async {
+    final data = await DataRequestService.dataRequest(value);
     if (data != null) {
       if (data["status"] == "success") {
         dataRequestInfoModel = DataRequestInfoModel.fromJson(data);
@@ -45,26 +45,26 @@ class DataRequestProvider extends ChangeNotifier {
   }
 
   updateData(String labelText, String searchText) {
-    searchedDataRequestInfoModel.dataRequestInfo!.clear();
+    searchedDataRequestInfoModel.data!.clear();
     //dataRequestInfoModel.dataRequestInfo!.clear();
     if (searchText.isEmpty) {
-      searchedDataRequestInfoModel.dataRequestInfo!.addAll(dataRequestInfoModel.dataRequestInfo!);
+      searchedDataRequestInfoModel.data!.addAll(dataRequestInfoModel.data!);
       //dataRequestInfoModel.dataRequestInfo!.addAll(dataRequestInfoModel.dataRequestInfo!);
     } else {
 
       if (labelText == 'Username') {
-        searchedDataRequestInfoModel.dataRequestInfo!.addAll(
-            dataRequestInfoModel.dataRequestInfo!.where((element) => element.userName!.toLowerCase().contains(searchText)).toList()
+        searchedDataRequestInfoModel.data!.addAll(
+            dataRequestInfoModel.data!.where((element) => element.userName!.toLowerCase().contains(searchText)).toList()
         );
       }
       if (labelText == 'Gmail') {
-        searchedDataRequestInfoModel.dataRequestInfo!.addAll(
-            dataRequestInfoModel.dataRequestInfo!.where((element) => element.email!.toLowerCase().contains(searchText)).toList()
+        searchedDataRequestInfoModel.data!.addAll(
+            dataRequestInfoModel.data!.where((element) => element.email!.toLowerCase().contains(searchText)).toList()
         );
       }
       if (labelText == 'Contact Number') {
-        searchedDataRequestInfoModel.dataRequestInfo!.addAll(
-            dataRequestInfoModel.dataRequestInfo!.where((element) => element.mobileNo!.toLowerCase().contains(searchText)).toList()
+        searchedDataRequestInfoModel.data!.addAll(
+            dataRequestInfoModel.data!.where((element) => element.mobileNo!.toLowerCase().contains(searchText)).toList()
         );
       }
 
@@ -90,7 +90,7 @@ class DataRequestProvider extends ChangeNotifier {
 
   void getDataRequestList() {
     dataRequestList.clear();
-    searchedDataRequestInfoModel.dataRequestInfo!.forEach((element) {
+    searchedDataRequestInfoModel.data!.forEach((element) {
       dataRequestList.add(element);
     });
 

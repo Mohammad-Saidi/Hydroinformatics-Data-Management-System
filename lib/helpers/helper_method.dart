@@ -6,6 +6,8 @@ class HelperMethod {
   static String? authToken;
   static String? userName;
   static String status = '';
+  static String? userGroupId;
+
 
   static setUserId(String id) async {
     final Loginpref = await SharedPreferences.getInstance();

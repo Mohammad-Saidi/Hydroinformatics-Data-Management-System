@@ -4,7 +4,7 @@ import 'package:hydroinformatics_data_management_system/services/user_registrati
 
 class UserRegistrationProvider extends ChangeNotifier {
   UserRegistrationModel? userRegistrationModel;
-  List<Message> dataList = [];
+  List<Data> dataList = [];
 
   Future<void> getRegistrationInfo(context) async {
     final data = await UserRegistrationService.userRegistration();
@@ -31,7 +31,7 @@ class UserRegistrationProvider extends ChangeNotifier {
 
   getPendingRegistrationInfo() {
     dataList.clear();
-    userRegistrationModel!.message!.forEach((element) {
+    userRegistrationModel!.data!.forEach((element) {
       dataList.add(element);
     });
     notifyListeners();

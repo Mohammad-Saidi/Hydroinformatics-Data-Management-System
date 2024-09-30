@@ -266,6 +266,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                       HelperMethod.setUserId(
                                           value['user_id'].toString());
+                                      HelperMethod.userGroupId = value['user_group_id'];
 
                                       HelperMethod.setUserName(value["name"]);
 

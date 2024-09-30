@@ -8,9 +8,8 @@ class UserRegistrationService {
   static Future<dynamic> userRegistration() async {
     dynamic data;
     try {
-      const url =
-          'http://103.141.9.234/himsmobappapi/api/v1/hidm/user/registration?api_key=121212';
-      // const url = 'http://192.168.91.160:8082/api/v1/hidm/user/registration?api_key=121212';
+      const url = 'http://103.141.9.234/himsmobappapi/api/v1/hidm/user/registration?api_key=121212';
+     // const url = 'http://hims.bwdb.gov.bd/himsmobappapidev/api//hidm/user/registration?api_key=121212';
       Uri uri = Uri.parse(url);
       final response = await http.post(uri,
           headers: {'Authorization': 'Bearer ${HelperMethod.getAuthToken()}'});

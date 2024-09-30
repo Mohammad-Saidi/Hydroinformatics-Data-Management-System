@@ -7,7 +7,7 @@ class LoginService {
     dynamic data;
     try {
       const url = 'http://103.141.9.234/himsmobappapi/api/v1/user/login';
-     // const url = 'http://192.168.91.160:8082/api/v1/user/login';
+      //const url = 'http://hims.bwdb.gov.bd/himsmobappapidev/api/v1/user/login';
       Uri uri = Uri.parse(url);
       final response = await http.post(uri,
           body: {'username': email, 'password': password, 'api_key': '121212'});

@@ -8,12 +8,15 @@ import 'package:hydroinformatics_data_management_system/pages/data_request_detai
 import 'package:hydroinformatics_data_management_system/pages/data_request_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/data_selection_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/edit_profile_page.dart';
+import 'package:hydroinformatics_data_management_system/pages/edited_water_level_availabity_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/ground_water_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/hydro_graph_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/initial_page.dart';
+import 'package:hydroinformatics_data_management_system/pages/intermediary_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/login_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/rainfall_graph_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/rainfall_page.dart';
+import 'package:hydroinformatics_data_management_system/pages/real_time_water_level_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/services_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/splash_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/surface_water_graph_page.dart';
@@ -24,11 +27,13 @@ import 'package:hydroinformatics_data_management_system/pages/water_level_availa
 import 'package:hydroinformatics_data_management_system/providers/data_availability_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/data_request_details_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/data_request_provider.dart';
+import 'package:hydroinformatics_data_management_system/providers/district_info_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/graph_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/login_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/registration_status_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/station_info_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/subdivision_provider.dart';
+import 'package:hydroinformatics_data_management_system/providers/sw_auto_manual_station_info_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/user_details_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/user_registration_documents_provider.dart';
 import 'package:hydroinformatics_data_management_system/providers/user_registration_provider.dart';
@@ -67,6 +72,8 @@ Future main() async {
     ChangeNotifierProvider(create: (context) => DataAvailabilityProvider()),
     ChangeNotifierProvider(
         create: (context) => WaterLevelAvailabilityProvider()),
+    ChangeNotifierProvider(create: (context) => DistrictInfoProvider()),
+    ChangeNotifierProvider(create: (context) => SurfaceWaterAutoManualInfoProvider()),
   ], child: const MyApp()));
 }
 
@@ -110,6 +117,9 @@ class MyApp extends StatelessWidget {
             DataAvailabilityListPage(),
         EditProfilePage.editProfilePage: (create) => EditProfilePage(),
         InitialPage.initialPage: (create) => InitialPage(),
+        IntermediaryPage.intermediaryPage: (create) => IntermediaryPage(),
+        EditedWaterLevelAvailabilityPage.editedWaterLevelAvailabilityPage: (create) => EditedWaterLevelAvailabilityPage(),
+        RealTimeWaterLevelAvailabilitySearchPage.waterLevelAvailabilitySearchPage: (create) => RealTimeWaterLevelAvailabilitySearchPage(),
       },
     );
   }

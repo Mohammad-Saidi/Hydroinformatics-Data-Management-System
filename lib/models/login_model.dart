@@ -9,7 +9,8 @@ class LoginModel {
   LoginModel({
       String? status, 
       String? message, 
-      num? userId, 
+      num? userId,
+      String? userGroupId,
       String? name, 
       Authorization? authorization, 
       List<ServiceInfo>? serviceInfo,}){
@@ -25,6 +26,7 @@ class LoginModel {
     _status = json['status'];
     _message = json['message'];
     _userId = json['user_id'];
+    _userGroupId = json['user_group_id'];
     _name = json['name'];
     _authorization = json['authorization'] != null ? Authorization.fromJson(json['authorization']) : null;
     if (json['service_info'] != null) {
@@ -37,18 +39,21 @@ class LoginModel {
   String? _status;
   String? _message;
   num? _userId;
+  String? _userGroupId;
   String? _name;
   Authorization? _authorization;
   List<ServiceInfo>? _serviceInfo;
 LoginModel copyWith({  String? status,
   String? message,
   num? userId,
+  num? userGroupId,
   String? name,
   Authorization? authorization,
   List<ServiceInfo>? serviceInfo,
 }) => LoginModel(  status: status ?? _status,
   message: message ?? _message,
   userId: userId ?? _userId,
+  userGroupId: _userGroupId ?? _userGroupId,
   name: name ?? _name,
   authorization: authorization ?? _authorization,
   serviceInfo: serviceInfo ?? _serviceInfo,
@@ -56,6 +61,7 @@ LoginModel copyWith({  String? status,
   String? get status => _status;
   String? get message => _message;
   num? get userId => _userId;
+  String? get userGroupId => _userGroupId;
   String? get name => _name;
   Authorization? get authorization => _authorization;
   List<ServiceInfo>? get serviceInfo => _serviceInfo;

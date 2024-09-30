@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hydroinformatics_data_management_system/custom/bottom_navigation.dart';
+import 'package:hydroinformatics_data_management_system/pages/intermediary_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/user_registration_page.dart';
 import 'package:hydroinformatics_data_management_system/pages/water_level_availability_page.dart';
 import 'package:provider/provider.dart';
@@ -38,10 +39,6 @@ class _InitialPageState extends State<InitialPage> {
     loginProvider.getServiceInfo();
     super.didChangeDependencies();
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -151,6 +148,7 @@ class _InitialPageState extends State<InitialPage> {
                                   });
                                 }
 
+
                                 if (loginProvider.serviceInfo[index].data! == "DR") {
                                   stationInfoProvider
                                       .getStationInfo(
@@ -161,15 +159,32 @@ class _InitialPageState extends State<InitialPage> {
                                         .pushNamed(DataRequestPage.dataRequestPage);
                                   });
                                 }
+
+                                // if (loginProvider.serviceInfo[index].data! == "DR") {
+                                //   stationInfoProvider
+                                //       .getStationInfo(
+                                //       loginProvider.serviceInfo[index].data!, context)
+                                //       .then((value) {
+                                //     EasyLoading.dismiss();
+                                //     Navigator.of(context)
+                                //         .pushNamed(DataRequestPage.dataRequestPage);
+                                //   });
+                                // }
                                 if (loginProvider.serviceInfo[index].data! == "SW") {
-                                  stationInfoProvider
-                                      .getStationInfo(
-                                      loginProvider.serviceInfo[index].data!, context)
-                                      .then((value) {
-                                    EasyLoading.dismiss();
-                                    Navigator.of(context)
-                                        .pushNamed(WaterLevelAvailabilityPage.waterLevelAvailabilityPage);
-                                  });
+                                  EasyLoading.dismiss();
+
+                                  Navigator.pushNamed(context, IntermediaryPage.intermediaryPage);
+
+
+
+                                  // stationInfoProvider
+                                  //     .getStationInfo(
+                                  //     loginProvider.serviceInfo[index].data!, context)
+                                  //     .then((value) {
+                                  //   EasyLoading.dismiss();
+                                  //   Navigator.of(context)
+                                  //       .pushNamed(WaterLevelAvailabilityPage.waterLevelAvailabilityPage);
+                                  // });
                                 }
                               },
                               child: Card(

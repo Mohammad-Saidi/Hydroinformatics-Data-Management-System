@@ -8,8 +8,8 @@ class SubdivisionService {
   static Future<dynamic> subdivisionInfo(value) async {
     dynamic data;
     try {
-      const url =
-          'http://103.141.9.234/himsmobappapi/api/v1/get/sub/division?api_key=121212';
+      const url = 'http://103.141.9.234/himsmobappapi/api/v1/get/sub/division?api_key=121212';
+     // const url = 'http://192.168.91.160:8082/api/v1/get/sub/division?api_key=121212';
       Uri uri = Uri.parse(url);
       final response = await http.post(uri,
           body: {'serial_no': value},

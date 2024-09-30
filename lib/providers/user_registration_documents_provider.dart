@@ -50,15 +50,15 @@ import '../services/user_registration_documents_service.dart';
 class UserRegistrationDocumentsProvider extends ChangeNotifier {
 
   UserRegistrationDocumentsModel? userRegistrationDocumentsModel;
-  Future<String?> getRegistrationDocumentsInfo(context, storageId) async {
+  Future<List<String?>?> getRegistrationDocumentsInfo(context, storageId) async {
     final data = await UserRegistrationDocumentsService.userRegistrationDocuments(storageId);
-    print('userRegistrationDocumentsService: $data');
+    //print('userRegistrationDocumentsService: $data');
 
     if (data != null) {
       print('data not equal to null');
       userRegistrationDocumentsModel = UserRegistrationDocumentsModel.fromJson(data);
       notifyListeners();
-      return userRegistrationDocumentsModel?.data;
+      return [userRegistrationDocumentsModel?.data, userRegistrationDocumentsModel?.type];
 
     } else {
       // showDialog<String>(

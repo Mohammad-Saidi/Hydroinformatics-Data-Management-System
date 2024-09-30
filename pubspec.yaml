@@ -53,6 +53,9 @@ dependencies:
   image_cropper:
   path_provider:
   path:
+  logger: ^2.3.0
+  syncfusion_flutter_pdfviewer:
+  open_file:
 
 flutter_launcher_icons:
   android: "launcher_icon"

@@ -24,6 +24,9 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
   late RegistrationStatusProvider registrationStatusProvider;
   late UserRegistrationDocumentsProvider userRegistrationDocumentsProvider;
   bool callOnce = true;
+  final TextEditingController rejectionReasonTextController =
+      TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   void didChangeDependencies() {
@@ -44,6 +47,13 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
       callOnce = false;
     }
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    rejectionReasonTextController.dispose();
   }
 
   @override
@@ -243,6 +253,17 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                                             FontWeight.w400,
                                                         color: Colors.white)),
                                                 const SizedBox(
+                                                  height: 8,
+                                                ),
+                                                Text(
+                                                    'DateTime: ${userDetailsProvider.userDetailsModel!.userDetails!.createDatetime}',
+                                                    maxLines: 2,
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                        FontWeight.w400,
+                                                        color: Colors.white)),
+                                                const SizedBox(
                                                   height: 35,
                                                 ),
                                                 Row(
@@ -258,7 +279,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                                                       .userDetailsModel!
                                                                       .userDetails!
                                                                       .userId,
-                                                                  'private')
+                                                                  'primary')
                                                               .then((value) {
                                                             if (value != null) {
                                                               if (value[
@@ -328,66 +349,8 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                                     Expanded(
                                                       child: TextButton(
                                                         onPressed: () {
-                                                          registrationStatusProvider
-                                                              .getRegistrationStatus(
-                                                                  userDetailsProvider
-                                                                      .userDetailsModel!
-                                                                      .userDetails!
-                                                                      .userId,
-                                                                  'reject')
-                                                              .then((value) {
-                                                            if (value != null) {
-                                                              if (value[
-                                                                      'status'] ==
-                                                                  'success') {
-                                                                Fluttertoast
-                                                                    .showToast(
-                                                                  msg: value[
-                                                                      'message'],
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .black,
-                                                                  textColor:
-                                                                      Colors
-                                                                          .white,
-                                                                );
+                                                          _showRejectDialog();
 
-                                                                userRegistrationProvider
-                                                                    .getRegistrationInfo(
-                                                                        context)
-                                                                    .then(
-                                                                        (value) {
-                                                                  userRegistrationProvider
-                                                                      .getPendingRegistrationInfo();
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                });
-                                                              }
-                                                            } else {
-                                                              showDialog<
-                                                                  String>(
-                                                                context:
-                                                                    context,
-                                                                builder: (BuildContext
-                                                                        context) =>
-                                                                    AlertDialog(
-                                                                  content:
-                                                                      const Text(
-                                                                          'Oops! Something went wrong'),
-                                                                  actions: <Widget>[
-                                                                    TextButton(
-                                                                      onPressed: () => Navigator.pop(
-                                                                          context,
-                                                                          'OK'),
-                                                                      child: const Text(
-                                                                          'OK'),
-                                                                    ),
-                                                                  ],
-                                                                ),
-                                                              );
-                                                            }
-                                                          });
                                                         },
                                                         child: Text('Reject',
                                                             style: GoogleFonts
@@ -460,7 +423,7 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                             height: 5,
                                           ),
                                           Text(
-                                              'Date: ${userRegistrationProvider.dataList[index].createDatetime}',
+                                              'UserType Name: ${userRegistrationProvider.dataList[index].userTypeName}',
                                               maxLines: 2,
                                               style: GoogleFonts.poppins(
                                                   fontSize: 15,
@@ -471,14 +434,17 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                     ),
                                     IconButton(
                                       onPressed: () async {
-                                        String? data = await userRegistrationDocumentsProvider
-                                            .getRegistrationDocumentsInfo(
-                                                context,
-                                                userRegistrationProvider
-                                                    .dataList[index].storageId);
+                                        List<String?>? data =
+                                            await userRegistrationDocumentsProvider
+                                                .getRegistrationDocumentsInfo(
+                                                    context,
+                                                    userRegistrationProvider
+                                                        .dataList[index]
+                                                        .storageId);
 
                                         print(
                                             'Storage Id: ${userRegistrationProvider.dataList[index].storageId}');
+                                        print('Documents Type: ${data?[1]}');
 
                                         // String? data =
                                         //     userRegistrationDocumentsProvider
@@ -486,12 +452,24 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                         //         .data;
                                         // print('Image data: $data');
 
-                                        if (data != null) {
+                                        bool? isItPdf =
+                                            data?[1]?.contains('pdf');
+                                        bool? isItImage =
+                                            data?[1]?.contains('image');
+                                        // print('Pdf: $isItPdf');
+                                        // print('Image: $isItImage');
+
+                                        if (data?[0] != null &&
+                                            (isItPdf! || isItImage!)) {
                                           Navigator.push(context,
                                               MaterialPageRoute(
                                                   builder: (context) {
                                             return UserRegistrationDocumentsPage(
-                                                data: data);
+                                              data: data?[0],
+                                              isItPdf: isItPdf,
+                                              isItImage: isItImage,
+                                              mimeType: data?[1],
+                                            );
                                           }));
                                         } else {
                                           showDialog(
@@ -502,7 +480,9 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
                                                       "User didn't give any Image"),
                                                   actions: [
                                                     ElevatedButton(
-                                                      onPressed: () {Navigator.pop(context);},
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
                                                       child: const Text('Ok'),
                                                     ),
                                                   ],
@@ -573,6 +553,116 @@ class _UserRegistrationPageState extends State<UserRegistrationPage> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showRejectDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Rejection Reason'),
+          content: Form(
+            key: _formKey,
+            child: TextFormField(
+              controller: rejectionReasonTextController,
+              decoration:
+                  const InputDecoration(hintText: "Enter rejection reason", hintStyle: TextStyle(fontSize: 15.0)),
+              maxLines: 4,
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Please provide a rejection reason';
+                }
+                return null;
+              },
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState?.validate() == true) {
+                  String reason = rejectionReasonTextController.text;
+                  registrationStatusProvider
+                      .getRegistrationStatus(
+                    userDetailsProvider
+                        .userDetailsModel!
+                        .userDetails!
+                        .userId,
+                    'primary',
+                    rejectionReason: reason,
+                  )
+                      .then((value) {
+                    if (value != null) {
+                      if (value[
+                      'status'] ==
+                          'success') {
+                        Fluttertoast
+                            .showToast(
+                          msg: value[
+                          'message'],
+                          backgroundColor:
+                          Colors
+                              .black,
+                          textColor:
+                          Colors
+                              .white,
+                        );
+
+                        userRegistrationProvider
+                            .getRegistrationInfo(
+                            context)
+                            .then(
+                                (value) {
+                              userRegistrationProvider
+                                  .getPendingRegistrationInfo();
+                              rejectionReasonTextController.clear();
+                              Navigator.of(
+                                  context)
+                                  .pop();
+                              Navigator.of(
+                                  context)
+                                  .pop();
+                            });
+                      }
+                    } else {
+                      showDialog<
+                          String>(
+                        context:
+                        context,
+                        builder: (BuildContext
+                        context) =>
+                            AlertDialog(
+                              content:
+                              const Text(
+                                  'Oops! Something went wrong'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(
+                                      context,
+                                      'OK'),
+                                  child: const Text(
+                                      'OK'),
+                                ),
+                              ],
+                            ),
+                      );
+                    }
+                  });
+                }
+              },
+              child: const Text('Send'),
+            ),
+            TextButton(
+              onPressed: () {
+                rejectionReasonTextController.clear();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

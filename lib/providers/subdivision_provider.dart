@@ -52,7 +52,7 @@ class SubdivisionProvider extends ChangeNotifier {
     subDivisionList.forEach((element) {
       allSubDivisionList.add(element.subdivisionName ?? '');
     });
-    notifyListeners();
+    //notifyListeners();
   }
 
   void getSubdivisionCodeList() {
@@ -60,7 +60,7 @@ class SubdivisionProvider extends ChangeNotifier {
     subDivisionList.forEach((element) {
       allDivisionCodeList.add(element.hydsubdivcode ?? '');
     });
-    notifyListeners();
+    //notifyListeners();
   }
 
   void getfilteredSubdivisionCode(subdivision) {
